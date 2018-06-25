@@ -222,7 +222,9 @@ String send_data(String payload) {
     }
 
     if (url == "") {
-        Serial.println("ERRR");
+        #ifdef DEBUG
+        Serial.println("Error pushing readings");
+        #endif
         return "";
     }
 
@@ -356,11 +358,15 @@ void loop() {
     Serial.printf("Loop Heap Size: %u\n", ESP.getFreeHeap());
     #endif
 
-    int power = read_power();
-    config.readings[config.reading_index] = power;
-    config.reading_index++;
+    if (config.reading_index < config.num_readings) {
+        int power = read_power();
+        config.readings[config.reading_index] = power;
+        config.reading_index++;
 
-    Serial.printf("Reading %d/%d = %d\n", config.reading_index, config.num_readings, power);
+        #ifdef DEBUG
+        Serial.printf("Reading %d/%d = %d\n", config.reading_index, config.num_readings, power);
+        #endif
+    }
 
     if (config.reading_index < config.num_readings) {
         sleep(config.interval);
