@@ -29,12 +29,12 @@ function test() {
 }
 
 function process(mac, interval, readings) {
-  DATA_SHEET = SHEETS.getSheetByName(DATA_SHEET);
-  
   if (mac != DEVICE_MAC) {
     Utilities.sleep(2000);
     return '';
   }
+
+  DATA_SHEET = SHEETS.getSheetByName(DATA_SHEET);
   
   var datetime      = new Date();
   var minus_seconds = (interval * readings.length) + TIME_ADJUST;
