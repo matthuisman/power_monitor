@@ -34,7 +34,7 @@ struct Persist {
 struct Config {
     byte num_readings     = 0;
     byte reading_index    = 0;
-    unsigned int interval = 10;
+    unsigned int interval = 0;
     unsigned int sleeps   = 0;
     byte battery_mode     = 0;
     byte version          = VERSION;
