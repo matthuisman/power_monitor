@@ -13,6 +13,9 @@ var SLEEP_TIMES   = [['07:00','09:00'], ['17:00','21:00']]
 var FREE_HOURS    = ['00:00', '00:30', '01:00', '01:30', '02:00', '02:30', '03:00', '03:30', '04:00', '04:30', '05:00', '05:30', '06:00', 
                     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00',
                     '21:00', '21:30', '22:00', '22:30', '23:00']
+
+var USERNAME = 'email@example.com'
+var PASSWORD = 'mypassword'
 ///////////////////////////////////////////
 
 var SHEETS = SpreadsheetApp.getActiveSpreadsheet();
@@ -24,6 +27,9 @@ function doPost(e) {
 }
 
 function test() {
+  update_hour(33);
+  Logger.log('Hour updated');
+
   var resp = process(DEVICE_MAC, READ_INTERVAL, [10,20,30,40,50,60,70,80,90,100]);
   Logger.log(resp);
 }
@@ -79,4 +85,27 @@ function process(mac, interval, readings) {
   }
 
   return JSON.stringify(config)+"\n";
+}
+
+function update_hour(hour_index) {
+  var payload = {
+    'LoginForm[username]': USERNAME,
+    'LoginForm[password]': PASSWORD,
+  };
+  
+  var options = {'method':'post', 'payload':payload, 'followRedirects':false};
+  var resp = UrlFetchApp.fetch('https://www.electrickiwi.co.nz/Site/login', options);
+  
+  var cookies = resp.getAllHeaders()["Set-Cookie"];
+  var cookie_str = '';
+  for (var i = 0; i < cookies.length; i++) {
+    cookie_str += cookies[i].split(';')[0] + ';';
+  };
+
+  payload = {
+    'KiwikPayment[free_hour_consumption]': hour_index,
+  };
+  
+  options = {'method':'post', 'payload':payload, 'headers': {'Cookie':cookie_str}};
+  resp = UrlFetchApp.fetch('https://www.electrickiwi.co.nz/account/update-hour-of-power', options);
 }
