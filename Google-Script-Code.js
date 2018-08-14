@@ -106,6 +106,6 @@ function update_hour(hour_index) {
     'KiwikPayment[free_hour_consumption]': hour_index,
   };
   
-  options = {'method':'post', 'payload':payload, 'headers': {'Cookie':cookie_str}};
+  options = {'method':'post', 'payload':payload, 'headers': {'Cookie':cookie_str}, 'followRedirects':false};
   resp = UrlFetchApp.fetch('https://www.electrickiwi.co.nz/account/update-hour-of-power', options);
 }
