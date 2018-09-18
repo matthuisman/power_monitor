@@ -246,6 +246,10 @@ String send_data(String payload) {
     }
 
     line = client.readStringUntil('\n');
+    #ifdef DEBUG
+    Serial.println(line);
+    #endif
+
     client.stop();
 
     WiFiOff();
