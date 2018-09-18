@@ -19,7 +19,7 @@ struct Config {
     char mqtt_password[64] = "";
 };
 
-void setup_wifi() {    
+void setup_wifi(bool forcePortal = false) {    
     WiFiManager wifiManager;
 
     #ifndef DEBUG
@@ -39,7 +39,7 @@ void setup_wifi() {
     wifiManager.addParameter(&mqtt_user);
     wifiManager.addParameter(&mqtt_password);
 
-    if (strcmp(config.mqtt_server, "") == 0) {
+    if (forcePortal || strcmp(config.mqtt_server, "") == 0) {
         wifiManager.startConfigPortal(AP_NAME, AP_PASSWORD);
     }
     else {
@@ -73,6 +73,7 @@ void setup_wifi() {
         #ifdef DEBUG
         Serial.println("Failed to connect to MQTT broker");
         #endif
+        setup_wifi(true);
     }
 }
 
